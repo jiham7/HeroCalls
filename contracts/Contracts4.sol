@@ -20,6 +20,7 @@ contract Hero is Storage {
 
     fallback() external {
         if(msg.data.length > 0) {
+            require(msg.sender == Storage.owner);
             // proxy to behavior methods
             (bool success, ) = behavior.delegatecall(msg.data);
             require(success);
