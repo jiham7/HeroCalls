@@ -23,12 +23,14 @@ contract Sidekick is Storage {
 
     function alert(uint256 enemies, bool armed) external {
         // TODO: use the behavior's recordAmbush to store the ambush
+        (bool success, ) = behavior.delegatecall(abi.encodeWithSignature("recordAmbush(uint256,bool)", enemies, armed));
+        require(success);
     }
 }
 
 contract Behavior is Storage {
     function recordAmbush(uint256 enemies, bool armed) external {
-        // TODO: ensure that only headquarters can send this message, otherwise revert
+        require(msg.sender == Storage.headquarters);// TODO: ensure that only headquarters can send this message, otherwise revert
         ambush = Ambush(true, enemies, armed);
     }
 }
